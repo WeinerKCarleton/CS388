@@ -1,0 +1,74 @@
+Name: Kai R. Weiner
+
+===== DAYTIME =====
+
+1. Identify the parts of the TCP 3-way handshake by listing the frame summaries of the relevant frames.
+
+1	192.168.64.4	132.163.97.1	TCP	[SYN] Seq=0 Win=64240 Len=0 MSS=1460 SACK_PERM TSval=1239527902 TSecr=0 WS=128
+2	132.163.97.1	192.168.64.4	TCP	[SYN, ACK] Seq=0 Ack=1 Win=65535 Len=0 MSS=1382 WS=64 SACK PERM
+3	192.168.64.4	132.163.97.1	TCP	[ACK] Seq=1 Ack=1 Win=64256 Len=0
+
+
+2. What port number does the client use for this interaction?
+
+The client uses port 45892 for this interaction.
+
+
+3. Why does the client need a port?
+
+The client needs a port in order to target which specific software it speaking with and to map the trajectory of requests.
+
+
+4. What frame contains the actual date and time?
+
+4	132.163.97.1	192.168.64.4	DAYTIME 	DAYTIME Response
+
+
+5. What is the full content (not counting the Ethernet, IP, and TCP headers) of the frame? What do each of the pieces of the frame content represent?
+
+The full content is the ASCII representation of the date time information received from the server. Each piece of the frame content represents an encrypted byte comprising the ASCII string.
+
+
+6. What does [SYN] mean?
+
+[SYN] is a synchronization packet, containing a sequence number and determining which ports communication should take place over and establishing that communication will take place.
+
+
+7. What does [ACK] mean?
+
+[ACK] is an acknowledgement packet, agreeing to a [SYN] packet that communication will take place in a certain direction or with a [FIN] packet that communication will end.
+
+
+8. What does [FIN] mean?
+
+[FIN] indicates that communication will end and the connection should be closed.
+
+
+9. Which entity (the nc client or the daytime server) initiated the closing of the TCP connection? How can you tell?
+
+The daytime server initiated the closing of the TCP connection. I can tell this because the server IP was the first to send a [FIN] packet.
+
+===== HTTP =====
+
+1. How many TCP connections were opened? How can you tell?
+
+There were two TCP connections opened. I can tell because there were two [SYN] packets sent by the client and two received but the server.
+
+
+2. Can you tell where my homepage (index.html) was requested?
+
+Your homepage was requested on frame 7. I can tell because this is where an HTTP request was sent by the client with the info reading:
+GET /index.html HTTP/1.1.
+
+
+3. Can you tell where my photograph (jeff_square_head.jpg) was requested?
+
+Your photograph was requested on frame 11. I can tell because this is where an HTTP request was sent by the nc client with the info reading:
+GET /jeff_square_head.jpg HTTP/1.1.
+
+
+===== QUESTIONS =====
+
+I am a little hazy on the terminology for what a connection counts as. Am I correct in thinking one connection is formed by both the client and the server sending each other [SYN] packets?
+
+Why is the nc client not just called the client, what is the difference?
