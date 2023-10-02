@@ -1,0 +1,57 @@
+1. What's your computer's IP address for its current Internet connection? (0-point bonus: how can you tell the difference between your Ethernet IP and your wireless IP if you have both connections active?)
+	+ ifconfig (I think it should show both as different?)
+	- hostname -I (only Kali)
+	- ip a (only Kali)
+
+2. How can you determine the IP address associated with a given host name?
+	+ ping *hostname*
+	- dig *hostname*
+	- trace route *hostname*
+	- bad.horse
+	- nslookup *hostname*
+	- host *hostname*
+
+3. How can you determine the host name(s) associated with a given IP address?
+	+ nslookup *ip address*
+
+4. How can you copy a file from one computer to another? Or more to the point, if you create a file on Kali virtual machine and you want to put it someplace where you can save it, like your your account on mantis.mathcs.carleton.edu, how do you go about it from the Kali command-line interface?
+	+ nc -l 1234 > filename.out (on computer 1)
+	+ nc host.example.com 1234 < filename.in (on computer 2)
+	- scp <source> <destination>
+	- To copy file from B to A while logged into B:
+		scp /path/to/file username@a:/path/to/destination
+		(should be server username)
+	- To copy file from B to A while logged into A:
+		scp username@b:/path/to/file /path/to/destination
+	-sftp
+
+5. How can you tell whether there's a process listening on a given port (e.g. port 80 or port 22) on a given host?
+	- lsof
+	- netstat
+	- ss
+	- nc -z host.example.com 20-30
+	- netstat -anpe | grep "1234" | grep "LISTEN"
+	- netstat -ltnp | grep -w ':80' 
+	- sudo lsof -i -P -n (https://www.cyberciti.biz/faq/unix-linux-check-if-port-is-in-use-command/)
+
+6. How can you tell which ports have processes listening on them on a given host?
+	- nmap <ip address>
+	- sudo netstat -lntup | grep "nginx"
+
+7. How can you retrieve and save a given web page (say https://google.com/ or https://carleton.edu/) in a file on your system?
+	- wget http://example.com/sample.php
+	- curl -o hello.zip ftp://speedtest.tele2.net/1MB.zip
+	- echo -n "GET / HTTP/1.0\r\n\r\n" | nc host.example.com 80
+	- wget --adjust-extension --span-hosts --convert-links --backup-converted \
+     		--no-directories --timestamping --page-requisites \
+     		--directory-prefix=thepageslug \
+     		https://example.com/page/of/interest
+
+8. How can you view the HTTP headers sent back from a specified web server when you request one of its pages?
+	+ curl -v http://google.com/
+	- curl -I http://www.example.com/test.php
+
+9. How can you view the HTTP headers that your computer sends to the web server when you do the tasks in the previous two questions?
+	+ curl -v http://google.com/
+
+(man curl to get help in terminal)
