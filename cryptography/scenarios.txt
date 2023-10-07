@@ -1,0 +1,38 @@
+Assignment: Cryptographic Scenarios
+Name: Kai R. Weiner
+
+1. In this scenario, Alice and Bob can start by using Diffie-Helman to agree on a shared key K. Alice can then send bob C = AES(K, M). Bob can decrypt this as AES_D(K, C) = M. Because Eve is incapable of AITM, the message will be successfully sent to Bob without Eve having the capability to find the key and intercept it.
+
+
+2. In this scenario: Alice could conduct Diffie-Helman key exchange where the g, p, and g^a mod p are all encrypted with Bob's public key (send E(P_B, g || p || g^a mod p). Bob could decrypt with his secret key to gain this information, then send back E(P_A, g^b mod p). Alice could decrypt this with her secret key. With this information, Bob and Alice could calculate a shared key K, Alice could send her message M encoded as AES(K, M || H(M)) to Bob and he could decrypt it as AES_D(K, AES(K, M || H(M))) and check that the hash of M and the sent H(M) are the same.
+
+Mal would not be able to decode any of the Diffie-Helman exchange as they would not have access to the secret keys of Bob and Alice, meaning they wouldn't have access to K and couldn't decode the message. 
+
+If Mal changed something in the Diffie-Helman exchange, Alice and Bob would likely not get the same key K. Bob would therefore decode AES_D(K, AES(K, M || H(M))) and not get M || H(M), meaning the hash of the sent M and H(M) would likely not be the same. If Mal changed the AES(K, M || H(M)), when Bob decodes the sent M and H(M) would likely not be the same. As a result, Alice could securely send her message with Bob detecting any change.
+
+
+3. In this scenario Bob and Alice could conduct Diffie-Helman key exchange to agree on key K, Bob could decide on a random number R and send E(P_A, R) to Alice, and Alice decode this using S_A and send R back to Bob along with AES(K, M) where M is her message.
+
+Eve would be unable to determine K from the Diffie-Helman exchange, and therefore unable to decipher AES(K, M). She would be able to see R but this would not matter. 
+
+Alice would be confident Alice is the sender because she successfully decrypted E(P_A, R) which could only have been done by the holder of her private key (which we will assume has not been stolen).
+
+
+4. Some arguments that Alice could present are:
+	a: Some sort of exceptional error like a solar flare occurred and caused the contract to be corrupted. This claim could definitely be plausible as such a thing is possible, but it would be unlikely due to the rarity of such incidents.
+	b: Some person in the middle manipulated the contract. Knowing Sig = E(S_A, H(C)), I would want to decipher sig with E(P_A, Sig) and decipher that with the hash function. If the deciphered Sig was equal to C, then Alice would almost certainly be lying about an AITM attack since only she could encrypt the message with S_A and any Mal figure making changes would alter the output so we would not decipher Sig as C.
+	c: An attacker somehow got hold of Alice's secret key S_A and acted as an AITM. As a judge, I would understand that this would allow an attacker to decode Alice's message, change it, then send it to Bob where Sig would decode to the altered C. The question would then be how Alice kept control of her secret key and how to tell if someone stole it from her.
+
+5. Sig_CA would involve E, H, S_CA, and Cert_b. Specifically, Sig_CA = E(S_CA, H(Cert_b)).
+
+
+6. Cert_B could be calculated by anyone using the publicly available E, H, and P_CA to decrypt Sig_CA, so Alice needs more than just Cert_B to trust Bob.
+
+Alice should first check that the certificate is legitimate by calculating h = H(Sig_CA), calculating x = E(P_CA, Sig), and checking whether x == h. If this were true, it would mean someone with S_CA created Sig so the certificate is trustworthy.
+
+To be convinced Bob has S_B: Alice could choose a random integer R and send Bob E(P_B, R), then Bob could decrypt this using S_B and send R back to Alice. If Alice receives the same R from Bob that she calculated it would mean Bob must have S_B since only the holder of S_B could accurately decipher the encryption function with Bob's public key.
+
+
+7. One potential way would be for Mal to steal Bob's secret key which would allow them to decode R and fool Alice into thinking Mal was Bob.
+
+A second potential way would be for Alice to breach either the CA or browser and forge a false certificate for their website saying it is bob.com with a public key that Mal holds the corresponding private key to.
