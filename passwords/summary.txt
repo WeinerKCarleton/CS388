@@ -1,0 +1,55 @@
+Brute-Force Password Cracking
+Kai R. Weiner
+
+ASSUMPTIONS:
+Calculated time per hash computed and per password cracked determined by dividing total time by hashes computed and passwords cracked.
+
+Part 1
+Total time: 0.338 seconds
+Number of hashes computed: 267516
+Passwords cracked: 2734
+Time per hash computed: 0.00000126347582948 seconds per hash
+Time per password cracked: 0.000123628383321 seconds per password
+Passwords cracked per number of hashes computed: 0.010219949461 or 1.0219949461 * 10^-2
+
+Part 2
+Note: Only Checked Passwords Beginning with "a"
+Total time: 74 minutes 23.801 seconds
+Number of hashes computed: 4205619037
+Passwords cracked: 153
+Time per hash computed: 0.00000106138976468 seconds per hash
+Time per password cracked: 29.1751699346 seconds per password
+Passwords cracked per number of hashes computed: 0.000000036379899999 or 3.6379899999 * 10^-8
+
+Part 3
+Total time: 6 minutes 10.071 seconds
+Number of hashes computed: 368016265
+Passwords cracked: 2734
+Time per hash computed: 0.00000100558327225 seconds per hash
+Time per password cracked: 0.135358814923 passwords per second
+Passwords cracked per number of hashes computed: 0.00000742901947554 or 7.42901947554 * 10^-6
+
+
+
+(Ratio of total possibilities to amount of passwords growing)
+
+
+
+Analysis:
+- Did your time per hash computed change between phases? By what factor? Why?
+	The time per hash did not significantly change between phases, any variations could be explained by slight differences in the code for each step and setup. This makes sense, as the function to compute a hash stayed the same between each version.
+- Did your time per password crack change between phases? By what factor? Why?
+	The time per password crack changed between phases, with stage 1 being a factor of 1000 off from stage 3 and stage 3 being a further factor of 100 from stage 2. This is likely due to the change in amount of passwords cracked per hashes computed, which grow by the same factors. A greater proportion of hashes computed would lead to longer times in between passwords calculated.
+- Suppose you wanted to precompute all the hashes for each possible password
+so you could just look up the password in a table indexed by the hash. How much
+memory would be required for each phase?
+	Total Space = (# hashes * 32) + (# passwords * 16) + (# hash to password mappings * 32)
+	Stage 1: (267516 * 32) + (2734 * 16) + (2734 * 32) = 8691744 bytes
+	Stage 2: (4205619037 * 32) + (153 * 16) + (153 * 32) = 1.3457981653 * 10^11 bytes
+	Stage 3: (368016265 * 32) + (2734 * 16) + (2734 * 32) = 11776651712 bytes
+- Give 3-4 reasons we should store password hashes and not the passwords themselves.
+Think in terms of threats, who the attackers might be, etc.
+	1. So that someone who physically stole the computer/database wouldn't have access to all password information.
+	2. So that the owner of the database couldn't use them for malicious purposes.
+	3. So that someone who hacked in to see the hash storage couldn't compromise the whole system.
+	4. So that the safety of the passwords depends on the hash function and additional security isn't needed on this low level storage file.
